@@ -32,4 +32,18 @@ class Role(Base):
         hired_actors = [audition for audition in self.auditions if audition.hired]
         return hired_actors[1] if len(hired_actors) > 1 else 'no actor has been hired for understudy for this role'
 
+class Audition(Base):
+    __tablename__ = 'auditions'
+    id = Column(Integer, primary_key=True)
+    actor = Column(String, nullable=False)
+    location = Column(String, nullable=False)
+    phone = Column(Integer, nullable=False)
+    hired = Column(Boolean, default=False)
+    role_id = Column(Integer, ForeignKey('roles.id'), nullable=False)
 
+    def call_back(self):
+        self.hired = True
+        session.commit()
+
+if __name__ == '__main__':
+    Base.metadata.create_all(engine)
